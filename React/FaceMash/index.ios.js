@@ -5,21 +5,25 @@
 'use strict';
 
 var React = require('react-native');
+var FaceMashTab = require('./tabs/FaceMash.ios');
+
 var {
     AppRegistry,
     StyleSheet,
     Text,
     View,
-    TabBarIOS
+    TabBarIOS,
+    StatusBarIOS
 } = React;
 
 var facemash = React.createClass({
     getInitialState() {
         return {
-            selectedTab: 'facemash'
+            selectedTab: 'faceMash'
         }
     },
     changeTab(tabName){
+        StatusBarIOS.setStyle(tabName === 'faceMash' ? 1 : 0);
         this.setState({
             selectedTab: tabName
         });
@@ -30,17 +34,15 @@ var facemash = React.createClass({
                 <TabBarIOS.Item title="FaceMash"
                                 icon={ require('image!facemash') }
                                 onPress={ () =>
-                                    this.changeTab('faceMash') }
+                                         this.changeTab('faceMash') }
                                 selected={this.state.selectedTab ===
                                           'faceMash'}>
-                    <View style={styles.pageView}>
-                        <Text>Face Mash</Text>
-                    </View>
+                    <FaceMashTab/>
                 </TabBarIOS.Item>
                 <TabBarIOS.Item title="Messages"
                                 icon={ require('image!messages') }
                                 onPress={ () =>
-                                    this.changeTab('messages') }
+                                         this.changeTab('messages') }
                                 selected={this.state.selectedTab ===
                                           'messages'}>
                     <View style={styles.pageView}>
@@ -50,7 +52,7 @@ var facemash = React.createClass({
                 <TabBarIOS.Item title="Settings"
                                 icon={require('image!settings')}
                                 onPress={ () =>
-                                    this.changeTab('settings') }
+                                         this.changeTab('settings') }
                                 selected={this.state.selectedTab ===
                                           'settings'}>
                     <View style={styles.pageView}>
