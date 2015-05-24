@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <style>
+         .trail { /* className for the trail elements */
+             position: absolute;
+             height: 6px; width: 6px;
+             border-radius: 3px;
+             background: teal;
+         }
+         body {
+             height: 300px;
+         }
+        </style>
+
+    </head>
+    <body>
+
+        <script>
+         var trailDotLen = 10;
+         var body = document.querySelector('body');
+
+         for( var i = 0; i < trailDotLen; i++){
+             var trailItem = document.createElement('div');
+             trailItem.className = 'trail';
+             
+             body.appendChild(trailItem);
+         }
+         
+         var trails = document.getElementsByClassName('trail');
+         
+         var moveIdx = 0;
+         addEventListener('mousemove', function(e){
+             moveIdx = (moveIdx + 1) % trailDotLen;
+
+             var curDot = trails[moveIdx];
+             curDot.style.left = e.x + 'px';
+             curDot.style.top = e.y + 'px';
+         });
+
+         console.log(trails);
+         
+         //          addEventListener('mousemove', function(e){
+         //     for(var idx1 = trails.length - 1; idx1 >= 0; idx1--){
+         //         if(idx1 !== 0){
+         //             pos[idx1] = pos[idx1 - 1]; 
+         //         } else {
+         //             pos[idx1] = {x: e.x, y: e.y};
+         //         }
+         //     }
+         //     console.log(pos);
+         //     for(var idx = 0; idx < trails.length; idx++){
+         //         trails[idx].style.left = pos[idx].x + 'px';
+         //         trails[idx].style.top = pos[idx].y + 'px';
+         //     };
+         // });
+         
+        </script>
+    </body>
+
+</html>

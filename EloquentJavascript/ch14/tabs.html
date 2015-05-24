@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+         #wrapper > div {
+             display: none;
+         }
+         #wrapper > div.selected {
+             display: block;
+         }
+
+         button.active {
+             background: black;
+             color: white;
+         }
+        </style>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div data-tabname="one">Tab one</div>
+            <div data-tabname="two">Tab two</div>
+            <div data-tabname="three">Tab three</div>
+        </div>
+        <script>
+         function asTabs(node) {
+             // create buttons
+             var btnContainer = document.createElement('section');
+             btnContainer.className = 'btn-container';
+
+             var tabAreas = node.querySelectorAll('div');
+             var tabLength = tabAreas.length;
+
+             // create and insert buttons
+             for(var i = 0; i < tabAreas.length; i++){
+                 var btn = document.createElement('button');
+                 btn.textContent = tabAreas[i].textContent;
+                 btn.id = tabAreas[i].getAttribute('data-tabname');
+                 btnContainer.appendChild(btn);
+             }
+
+             btnContainer.addEventListener('click', function(e){
+                 clear(tabAreas);
+                 clear(btnContainer.querySelectorAll('button'));
+                 
+                 e.target.className = 'active';
+                 
+                 setTabSelected(e.target.id, tabAreas);
+             });
+
+             function setTabSelected(targetId, tabAreas){
+                 for(var i = 0; i < tabAreas.length; i++){
+                     if(tabAreas[i].getAttribute('data-tabname') ===
+                         targetId){
+                             tabAreas[i].className = 'selected';
+                     }
+                 }
+             }
+
+             function clear(nodes){
+                 for(var i = 0; i < nodes.length; i++){
+                     nodes[i].className = '';
+                 }
+             }
+
+             node.insertBefore(btnContainer, tabAreas[0]);
+         }
+         asTabs(document.querySelector("#wrapper"));
+        </script>
+    </body>
+</html>

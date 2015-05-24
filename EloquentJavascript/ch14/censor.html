@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+
+    </head>
+
+    <body>
+        <input type="text">
+        <script>
+         var field = document.querySelector("input");
+         // var banned = ['Q', 'W', 'X'];
+         // field.addEventListener('keyup', function(e){
+         //     var char = String.fromCharCode(e.keyCode);
+         //     if(banned.indexOf(char) >= 0){
+         //         field.value = field.value.slice(0,field.value.length - 1);
+         //     }
+         // });
+
+         var banned = ['q', 'w', 'x'];
+         field.addEventListener('keypress', function(e){
+             var char = String.fromCharCode(e.charCode);
+
+             if(banned.indexOf(char) >= 0){
+                 e.preventDefault();
+             }
+         });
+        </script>
+    </body>
+
+</html>
