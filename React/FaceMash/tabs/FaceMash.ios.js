@@ -7,100 +7,9 @@ var {
     Text,
     ActivityIndicatorIOS,
     StyleSheet,
+    TouchableHighlight,
     Image
 } = React;
-
-var Person = React.createClass({
-    render: function(){
-        var person = this.props.person;
-
-        return (
-            <View style={styles.person}>
-                <Image style={styles.personImage} source={ {uri: person.picture} } />
-                <View style={styles.personInfo}>
-                    <Text style={styles.personName}>
-                        {person.firstName} {person.lastName}
-                    </Text>
-                    <View style={styles.personScore}>
-                        <Text style={styles.personScoreHeader}>
-                            WON
-                        </Text>
-                        <Text style={[styles.personScoreValue,
-                                      styles.won]}>
-                            {person.won}
-                        </Text>
-                    </View>
-                    <View style={styles.personScore}>
-                        <Text style={styles.personScoreHeader}>
-                            LOST
-                        </Text>
-                        <Text style={[styles.personScoreValue,
-                                      styles.lost]}>
-                            {person.won}
-                        </Text>
-                    </View>
-                    <View style={styles.personScore}>
-                        <Text style={styles.personScoreHeader}>
-                            SCORE
-                        </Text>
-                        <Text style={styles.personScoreValue}>
-                            {person.score}
-                        </Text>
-                    </View>
-                </View>
-            </View>
-        );
-    }
-});
-
-var facemashTab = React.createClass({
-    getInitialState: function(){
-        return {
-            list: [],
-            currentIndex: 0
-        };
-    },
-    componentWillMount: function(){
-        fetch('http://localhost:8882/rest/mash')
-            .then(res => res.json())
-            .then(res => this.setState({ list:res }));
-    },
-    render: function() {
-        var contents;
-        if(!this.state.list.length){
-            contents = (
-                <View style={styles.loading}>
-                    <Text style={styles.loadingText}>Loading</Text>
-                    <ActivityIndicatorIOS/>
-                </View>
-            );
-        } else {
-            var {list, currentIndex} = this.state;
-
-            var record = list[currentIndex];
-            var people = record.users.map(
-                person => <Person person={person}/>
-            );
-
-            contents = (
-                <View style={styles.content}>
-                    {people}
-                </View>
-            );
-        }
-
-        return (
-            <View style={ styles.container }>
-                <View style={ styles.header }>
-                    <Text style={styles.headerText}>
-                        FaceMash
-                    </Text>
-                </View>
-                {contents}
-            </View>
-        );
-    }
-});
 
 var styles = StyleSheet.create({
     container: {
@@ -135,6 +44,7 @@ var styles = StyleSheet.create({
         overflow: 'hidden'
     },
     personInfo: {
+        backgroundColor: '#fff',
         borderLeftColor: 'rgba(0,0,0,0.1)',
         borderLeftWidth: 1,
         borderRightColor: 'rgba(0,0,0,0.1)',
@@ -174,6 +84,121 @@ var styles = StyleSheet.create({
         color: '#dd4b39'
     }
 
+});
+
+var Person = React.createClass({
+    onPress: function(){
+        this.props.onPress(this.props.person.userID);
+    },
+    render: function(){
+        var person = this.props.person;
+
+        return (
+            <View style={styles.person}>
+                <Image style={styles.personImage} source={ {uri: person.picture} } />
+                <TouchableHighlight onPress={this.onPress} >
+                    <View style={styles.personInfo}>
+                        <Text style={styles.personName}>
+                            {person.firstName} {person.lastName}
+                        </Text>
+                        <View style={styles.personScore}>
+                            <Text style={styles.personScoreHeader}>
+                                WON
+                            </Text>
+                            <Text style={[styles.personScoreValue,
+                                          styles.won]}>
+                                {person.won}
+                            </Text>
+                        </View>
+                        <View style={styles.personScore}>
+                            <Text style={styles.personScoreHeader}>
+                                LOST
+                            </Text>
+                            <Text style={[styles.personScoreValue,
+                                          styles.lost]}>
+                                {person.won}
+                            </Text>
+                        </View>
+                        <View style={styles.personScore}>
+                            <Text style={styles.personScoreHeader}>
+                                SCORE
+                            </Text>
+                            <Text style={styles.personScoreValue}>
+                                {person.score}
+                            </Text>
+                        </View>
+                    </View>
+                </TouchableHighlight>
+            </View>
+        );
+    }
+});
+
+var facemashTab = React.createClass({
+    getInitialState: function(){
+        return {
+            list: [],
+            currentIndex: 0
+        };
+    },
+    componentWillMount: function(){
+        fetch('http://localhost:8882/rest/mash')
+            .then(res => res.json())
+            .then(res => this.setState({ list:res }));
+    },
+    onPersonPress: function(userID){
+        console.log(userID);
+        fetch('http://localhost:8882/rest/mash', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                userID: userID
+            })
+        }).then(res => console.log(res));
+
+        this.setState({
+            currentIndex: this.state.currentIndex + 1
+        });
+    },
+    render: function() {
+        var contents;
+        if(!this.state.list.length){
+            contents = (
+                <View style={styles.loading}>
+                    <Text style={styles.loadingText}>Loading</Text>
+                    <ActivityIndicatorIOS/>
+                </View>
+            );
+        } else {
+            var {list, currentIndex} = this.state;
+
+            var record = list[currentIndex];
+
+            var people = record.users.map(
+                person => <Person person={person}
+                                  onPress={this.onPersonPress}/>
+            );
+
+            contents = (
+                <View style={styles.content}>
+                    {people}
+                </View>
+            );
+        }
+
+        return (
+            <View style={ styles.container }>
+                <View style={ styles.header }>
+                    <Text style={styles.headerText}>
+                        FaceMash
+                    </Text>
+                </View>
+                {contents}
+            </View>
+        );
+    }
 });
 
 module.exports = facemashTab;

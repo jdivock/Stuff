@@ -4,8 +4,9 @@
  */
 'use strict';
 
-var React = require('react-native');
-var FaceMashTab = require('./tabs/FaceMash.ios');
+var React = require('react-native'),
+    FaceMashTab = require('./tabs/FaceMash.ios'),
+    MessagesTab = require('./tabs/Messages.ios');
 
 var {
     AppRegistry,
@@ -16,11 +17,18 @@ var {
     StatusBarIOS
 } = React;
 
+var styles = StyleSheet.create({
+    pageView: {
+        backgroundColor: '#fff',
+        flex: 1
+    }
+});
+
 var facemash = React.createClass({
     getInitialState() {
         return {
             selectedTab: 'faceMash'
-        }
+        };
     },
     changeTab(tabName){
         StatusBarIOS.setStyle(tabName === 'faceMash' ? 1 : 0);
@@ -45,9 +53,7 @@ var facemash = React.createClass({
                                          this.changeTab('messages') }
                                 selected={this.state.selectedTab ===
                                           'messages'}>
-                    <View style={styles.pageView}>
-                        <Text>Messages</Text>
-                    </View>
+                    <MessagesTab/>
                 </TabBarIOS.Item>
                 <TabBarIOS.Item title="Settings"
                                 icon={require('image!settings')}
@@ -61,13 +67,6 @@ var facemash = React.createClass({
                 </TabBarIOS.Item>
             </TabBarIOS>
         );
-    }
-});
-
-var styles = StyleSheet.create({
-    pageView: {
-        backgroundColor: '#fff',
-        flex: 1
     }
 });
 
