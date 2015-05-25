@@ -82,6 +82,15 @@ var styles = StyleSheet.create({
     },
     lost: {
         color: '#dd4b39'
+    },
+    noMoreContainer: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    noMoreText: {
+        flex: 1,
+        fontSize: 20,
+        fontWeight: 'bold'
     }
 
 });
@@ -169,6 +178,14 @@ var facemashTab = React.createClass({
                 <View style={styles.loading}>
                     <Text style={styles.loadingText}>Loading</Text>
                     <ActivityIndicatorIOS/>
+                </View>
+            );
+        } else if(this.state.currentIndex >= this.state.list.length){
+            contents = (
+                <View style={styles.noMoreContainer}>
+                    <Text style={styles.noMoreText}>
+                        That's it champ, no more females
+                    </Text>
                 </View>
             );
         } else {
